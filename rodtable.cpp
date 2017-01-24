@@ -32,9 +32,9 @@ void RodTable::removeAll()
 
 void RodTable::createActions()
 {
-    addAct = new QAction(QIcon("addIcon.png"),"Add rod", this);
+    addAct = new QAction(QIcon(":/resources/images/addIcon.png"),"Add rod", this);
     connect(addAct, SIGNAL(triggered()), this, SLOT(add()));
-    removeAct = new QAction(QIcon("removeIcon.png"),"Remove select rod", this);
+    removeAct = new QAction(QIcon(":/resources/images/removeIcon.png"),"Remove select rod", this);
     connect(removeAct, SIGNAL(triggered()), this, SLOT(remove()));
     removeAllAct = new QAction(QIcon(""),"Remove all rods", this);
     connect(removeAllAct, SIGNAL(triggered()), this, SLOT(removeAll()));

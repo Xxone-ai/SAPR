@@ -5,15 +5,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    dir.setPath(qApp->applicationDirPath());
-    for(int i = 0; i < 4; i++)
-    {
-        dir.cdUp();
-    }
-    dir.setPath(dir.path() + "/SAPR/images/");
-    QDir::setCurrent(dir.path()); //смена текущей папки
-    qDebug() << dir.path();
-
     ui->setupUi(this);
     this->setFixedSize(1150,650);
     this->setWindowTitle("SAPR");
@@ -68,9 +59,9 @@ MainWindow::MainWindow(QWidget *parent) :
     mainLayout->addLayout(vlayout);
     mainLayout->addWidget(view);
     centralWidget->setLayout(mainLayout);
-    QPixmap leftSupportPix("leftSupport.png");
+    QPixmap leftSupportPix(":/resources/images/leftSupport.png");
     leftSupportItem = scene->addPixmap(leftSupportPix);
-    QPixmap rightSupportPix("rightSupport.png");
+    QPixmap rightSupportPix(":/resources/images/rightSupport.png");
     rightSupportItem = scene->addPixmap(rightSupportPix);
     leftSupportItem->hide();
     rightSupportItem->hide();
@@ -100,22 +91,22 @@ MainWindow::~MainWindow()
 QToolBar *MainWindow::createToolBar()
 {
     QToolBar* toolBar = new QToolBar();
-    toolBar->addAction(QIcon("newIcon.png"),"New construction", this, SLOT(newConstruction()));
-    toolBar->addAction(QIcon("saveIcon.png"),"Save File", this, SLOT(save()));
+    toolBar->addAction(QIcon(":/resources/images/newIcon.png"),"New construction", this, SLOT(newConstruction()));
+    toolBar->addAction(QIcon(":/resources/images/saveIcon.png"),"Save File", this, SLOT(save()));
     toolBar->addSeparator();
-    toolBar->addAction(QIcon("addIcon.png"),"Add rod", rodCreator, SLOT(show()));
+    toolBar->addAction(QIcon(":/resources/images/addIcon.png"),"Add rod", rodCreator, SLOT(show()));
     toolBar->addSeparator();
-    leftSupportAction = toolBar->addAction(QIcon("leftSupport.png"),"Left support", this, SLOT(setLeftSupport()));
+    leftSupportAction = toolBar->addAction(QIcon(":/resources/images/leftSupport.png"),"Left support", this, SLOT(setLeftSupport()));
     leftSupportAction->setCheckable(true);
-    rightSupportAction = toolBar->addAction(QIcon("rightSupport.png"),"Right support", this, SLOT(setRightSupport()));
+    rightSupportAction = toolBar->addAction(QIcon(":/resources/images/rightSupport.png"),"Right support", this, SLOT(setRightSupport()));
     rightSupportAction->setCheckable(true);
     toolBar->addSeparator();
-    toolBar->addAction(QIcon("vertexPlusForce.png"),"Create vertex force", this, SLOT(openVertexForceCreator()));
-    toolBar->addAction(QIcon("calculateIcon.png"),"Calculate", this, SLOT(calculate()));
-    toolBar->addAction(QIcon("tableIcon.png"), "Result table", this, SLOT(openResultTable()));
+    toolBar->addAction(QIcon(":/resources/images/vertexPlusForce.png"),"Create vertex force", this, SLOT(openVertexForceCreator()));
+    toolBar->addAction(QIcon(":/resources/images/calculateIcon.png"),"Calculate", this, SLOT(calculate()));
+    toolBar->addAction(QIcon(":/resources/images/tableIcon.png"), "Result table", this, SLOT(openResultTable()));
     toolBar->addSeparator();
-    zoomInAct = toolBar->addAction(QIcon("zoomPlusIcon.png"), "Zoom In epure", this, SLOT(zoomInEpure()));
-    zoomOutAct = toolBar->addAction(QIcon("zoomMinusIcon.png"), "Zoom Out epure", this, SLOT(zoomOutEpure()));
+    zoomInAct = toolBar->addAction(QIcon(":/resources/images/zoomPlusIcon.png"), "Zoom In epure", this, SLOT(zoomInEpure()));
+    zoomOutAct = toolBar->addAction(QIcon(":/resources/images/zoomMinusIcon.png"), "Zoom Out epure", this, SLOT(zoomOutEpure()));
     toolBar->addSeparator();
     return toolBar;
 }
@@ -171,11 +162,11 @@ void MainWindow::addKernelSlot(const double& L,const double& A, const double& E,
 
         if(Q > 0)
         {
-            drawLongForce(rectItem,"longPlusForce.png");
+            drawLongForce(rectItem,":/resources/images/longPlusForce.png");
         }
         if(Q < 0)
         {
-            drawLongForce(rectItem,"longMinusForce.png");
+            drawLongForce(rectItem,":/resources/images/longMinusForce.png");
         }
 
         for(int i = 0; i < 2; i++)
@@ -184,11 +175,11 @@ void MainWindow::addKernelSlot(const double& L,const double& A, const double& E,
             {
                 Vertex vertex;
                 vertex.value = 0.0;
-                QPixmap pix1("VertexMinusForce.png");
+                QPixmap pix1(":/resources/images/vertexMinusForce.png");
                 vertex.minusForce = scene->addPixmap(pix1);
                 vertex.minusForce->setParentItem(rods.at(0)->item());
                 vertex.minusForce->hide();
-                QPixmap pix2("VertexPlusForce.png");
+                QPixmap pix2(":/resources/images/vertexPlusForce.png");
                 vertex.plusForce = scene->addPixmap(pix2);
                 vertex.plusForce->setParentItem(rods.at(0)->item());
                 vertex.plusForce->hide();
@@ -202,11 +193,11 @@ void MainWindow::addKernelSlot(const double& L,const double& A, const double& E,
             {
                 Vertex vertex;
                 vertex.value = 0.0;
-                QPixmap pix1("VertexMinusForce.png");
+                QPixmap pix1(":/resources/images/vertexMinusForce.png");
                 vertex.minusForce = scene->addPixmap(pix1);
                 vertex.minusForce->setParentItem(rods.at(0)->item());
                 vertex.minusForce->hide();
-                QPixmap pix2("VertexPlusForce.png");
+                QPixmap pix2(":/resources/images/vertexPlusForce.png");
                 vertex.plusForce = scene->addPixmap(pix2);
                 vertex.plusForce->setParentItem(rods.at(0)->item());
                 vertex.plusForce->hide();
@@ -258,20 +249,20 @@ void MainWindow::addKernelSlot(const double& L,const double& A, const double& E,
 
         if(Q > 0)
         {
-            drawLongForce(rectItem, "longPlusForce.png");
+            drawLongForce(rectItem, ":/resources/images/longPlusForce.png");
         }
         if(Q < 0)
         {
-            drawLongForce(rectItem, "longMinusForce.png");
+            drawLongForce(rectItem, ":/resources/images/longMinusForce.png");
         }
 
         Vertex vertex;
         vertex.value = 0.0;
-        QPixmap pix1("VertexMinusForce.png");
+        QPixmap pix1(":/resources/images/vertexMinusForce.png");
         vertex.minusForce = scene->addPixmap(pix1);
         vertex.minusForce->setParentItem(rods.at(rods.size() - 1)->item());
         vertex.minusForce->hide();
-        QPixmap pix2("VertexPlusForce.png");
+        QPixmap pix2(":/resources/images/vertexPlusForce.png");
         vertex.plusForce = scene->addPixmap(pix2);
         vertex.plusForce->setParentItem(rods.at(rods.size() - 1)->item());
         vertex.plusForce->hide();

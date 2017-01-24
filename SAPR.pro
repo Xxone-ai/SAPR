@@ -28,3 +28,6 @@ HEADERS  += mainwindow.h \
     rodtable.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    resource.qrc
