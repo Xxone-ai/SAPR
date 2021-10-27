@@ -35,6 +35,12 @@ public:
 
     ~MainWindow();
 
+protected:
+    #if QT_CONFIG(wheelevent)
+    void wheelEvent(QWheelEvent* event) override;
+#endif
+    void scaleView(qreal scaleFactor);
+
 private slots:
     void on_addRodButton_clicked();
 
@@ -57,5 +63,6 @@ private:
     QList <QRect> rects;
     QList<double> focusedForcesList;
     QList<double> distributedForces;
+
 };
 #endif // MAINWINDOW_H

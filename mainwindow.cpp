@@ -75,7 +75,6 @@ void MainWindow::on_deleteRodButton_clicked()
     draw();
 }
 
-
 void MainWindow::on_rodDataTable_itemChanged(QTableWidgetItem *item)
 {
     QString data = item->text();
@@ -175,8 +174,6 @@ void MainWindow::on_distributedForces_itemChanged(QTableWidgetItem *item)
     draw();
 }
 
-
-
 void MainWindow::draw()
 {
     QGraphicsScene *scene = new QGraphicsScene(this);
@@ -275,7 +272,6 @@ void MainWindow::draw()
     }
 }
 
-
 void MainWindow::on_leftTerm_clicked()
 {
     draw();
@@ -284,4 +280,17 @@ void MainWindow::on_leftTerm_clicked()
 void MainWindow::on_rightTerm_clicked()
 {
     draw();
+}
+
+void MainWindow::scaleView(qreal scaleFactor)
+{
+    qreal factor = ui->graphicsView->transform().scale(scaleFactor, scaleFactor).mapRect(QRectF(0, 0, 1, 1)).width();
+    if (factor < 0.1 || factor > 100)
+        return;
+
+    ui->graphicsView->scale(scaleFactor, scaleFactor);
+}
+void MainWindow::wheelEvent(QWheelEvent *event)
+{
+    scaleView(pow(2., -event->angleDelta().y() / 240.0));
 }
