@@ -215,7 +215,8 @@
      <string>Файл</string>
     </property>
     <addaction name="separator"/>
-    <addaction name="newFile"/>
+    <addaction name="separator"/>
+    <addaction name="loadFromFile"/>
     <addaction name="separator"/>
     <addaction name="saveFile"/>
     <addaction name="separator"/>
@@ -285,6 +286,11 @@
   <action name="action_21">
    <property name="text">
     <string>Удалить все заделки</string>
+   </property>
+  </action>
+  <action name="loadFromFile">
+   <property name="text">
+    <string>Загрузить из файла</string>
    </property>
   </action>
  </widget>

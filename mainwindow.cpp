@@ -290,6 +290,7 @@ void MainWindow::scaleView(qreal scaleFactor)
 
     ui->graphicsView->scale(scaleFactor, scaleFactor);
 }
+
 void MainWindow::wheelEvent(QWheelEvent *event)
 {
     scaleView(pow(2., -event->angleDelta().y() / 240.0));
