@@ -1,4 +1,5 @@
 #include "rodcreator.h"
+#include <QRegularExpressionValidator>
 
 RodCreator::RodCreator(QWidget *parent) : QWidget(parent)
 {
@@ -25,10 +26,10 @@ RodCreator::RodCreator(QWidget *parent) : QWidget(parent)
     e_lbl->setAlignment(Qt::AlignRight);
     sigma_lbl->setAlignment(Qt::AlignRight);
 
-    lEdit->setValidator(new QRegExpValidator(regExp1));
-    aEdit->setValidator(new QRegExpValidator(regExp1));
-    eEdit->setValidator(new QRegExpValidator(regExp));
-    sigmaEdit->setValidator(new QRegExpValidator(regExp));
+    lEdit->setValidator(new QRegularExpressionValidator(regExp1));
+    aEdit->setValidator(new QRegularExpressionValidator(regExp1));
+    eEdit->setValidator(new QRegularExpressionValidator(regExp));
+    sigmaEdit->setValidator(new QRegularExpressionValidator(regExp));
 
     QGridLayout* gridlayout = new QGridLayout;
     gridlayout->addWidget(a_lbl,0,0);

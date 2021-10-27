@@ -21,8 +21,8 @@ private:
     QLabel* l_lbl;
     QLabel* sigma_lbl;
     QLabel* q_lbl;
-    QRegExp regExp;
-    QRegExp regExp1;
+    QRegularExpression regExp;
+    QRegularExpression regExp1;
     QDoubleSpinBox* qValueBox;
 
 signals:

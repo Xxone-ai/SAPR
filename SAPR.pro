@@ -1,33 +1,24 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2016-11-17T16:43:11
-#
-#-------------------------------------------------
-
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = SAPR
-TEMPLATE = app
+CONFIG += c++11
 
+# You can make your code fail to compile if it uses deprecated APIs.
+# In order to do so, uncomment the following line.
+#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
-    rod.cpp \
-    rodcreator.cpp \
-    vertexforcecreator.cpp \
-    resulttable.cpp \
-    rodtable.cpp
+SOURCES += \
+    main.cpp \
+    mainwindow.cpp
 
-HEADERS  += mainwindow.h \
-    rod.h \
-    rodcreator.h \
-    vertexforcecreator.h \
-    resulttable.h \
-    rodtable.h
+HEADERS += \
+    mainwindow.h
 
-FORMS    += mainwindow.ui
+FORMS += \
+    mainwindow.ui
 
-RESOURCES += \
-    resource.qrc
+# Default rules for deployment.
+qnx: target.path = /tmp/$${TARGET}/bin
+else: unix:!android: target.path = /opt/$${TARGET}/bin
+!isEmpty(target.path): INSTALLS += target
