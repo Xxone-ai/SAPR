@@ -9,8 +9,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->rodDataTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->focusedForces->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->distributedForces->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
-
+    ui->leftTerm->setEnabled(false);
+    ui->rightTerm->setEnabled(false);
 }
 
 MainWindow::~MainWindow()
@@ -96,10 +96,15 @@ void MainWindow::on_rodDataTable_itemChanged(QTableWidgetItem *item)
                     this->rodParams.push_back(ui->rodDataTable->item(i,j)->text().toDouble());
             }
             if(rodParams.size() == 4)
+            {
                 this->rods.push_back(rodParams);
+                ui->leftTerm->setEnabled(1);
+                ui->rightTerm->setEnabled(1);
+            }
             rodParams.clear();
        }
    }
+   draw();
 }
 
 bool MainWindow::checkTable(QTableWidget *wgt)
@@ -142,7 +147,7 @@ void MainWindow::on_focusedForces_itemChanged(QTableWidgetItem *item)
              }
         }
     }
-
+    draw();
 }
 
 void MainWindow::on_distributedForces_itemChanged(QTableWidgetItem *item)
@@ -154,7 +159,6 @@ void MainWindow::on_distributedForces_itemChanged(QTableWidgetItem *item)
     }
     else
     {
-        item->setBackground(Qt::red);
         item->setData(0, QString::number(0));
     }
     if(checkTable(ui->distributedForces))
@@ -168,6 +172,7 @@ void MainWindow::on_distributedForces_itemChanged(QTableWidgetItem *item)
             }
         }
     }
+    draw();
 }
 
 
@@ -177,7 +182,10 @@ void MainWindow::draw()
     QGraphicsScene *scene = new QGraphicsScene(this);
     QList<QRect> rects;
     scene->setItemIndexMethod(QGraphicsScene::NoIndex);
-
+    if(rods.empty())
+    {
+        return;
+    }
     double x = 0;
     double y = 0;
     double height = 40;
@@ -201,7 +209,6 @@ void MainWindow::draw()
              x+=widht*rods[i][0];
          }
     }
-    ui->graphicsView->setScene(scene);
     if(ui->leftTerm->isChecked())
     {
         QGraphicsPixmapItem* leftTerm = scene->addPixmap(QPixmap("C:/Qt/SAPR/res/images/leftTerm.png"));
@@ -214,9 +221,10 @@ void MainWindow::draw()
         rightTerm->setPos(rects.last().bottomRight().x(), rects.first().center().y()-rightTerm->pixmap().height()/2);
         rightTerm->show();
     }
-
-
-    for(int i = 0; i < focusedForcesList.size(); i++)
+    ui->graphicsView->setScene(scene);
+    if(!focusedForcesList.empty())
+    {
+        for(int i = 0; i < focusedForcesList.size(); i++)
     {
         if (i!=rods.size())
         {
@@ -245,9 +253,12 @@ void MainWindow::draw()
             }
         }
     }
-    for(int i = 0; i < distributedForces.size(); i++)
+    }
+    if(!distributedForces.empty())
     {
-        if(distributedForces[i]!=0)
+     for(int i = 0; i < distributedForces.size(); i++)
+        {
+          if(distributedForces[i]!=0)
         {
             if(distributedForces[i] < 0)
             {
@@ -260,13 +271,17 @@ void MainWindow::draw()
                 distributedForceRight->setPos(rects[i].center().x()-distributedForceRight->pixmap().width()/2, rects[i].center().y()-distributedForceRight->pixmap().height()/2);
             }
         }
+        }
     }
 }
 
 
+void MainWindow::on_leftTerm_clicked()
+{
+    draw();
+}
 
-
-void MainWindow::on_drawButton_clicked()
+void MainWindow::on_rightTerm_clicked()
 {
     draw();
 }

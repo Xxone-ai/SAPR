@@ -46,9 +46,9 @@ private slots:
 
     void on_distributedForces_itemChanged(QTableWidgetItem *item);
 
+    void on_leftTerm_clicked();
 
-
-    void on_drawButton_clicked();
+    void on_rightTerm_clicked();
 
 private:
     Ui::MainWindow *ui;

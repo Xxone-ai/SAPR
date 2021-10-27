@@ -32,27 +32,27 @@
         </row>
         <column>
          <property name="text">
-          <string>L</string>
+          <string>L, м</string>
          </property>
         </column>
         <column>
          <property name="text">
-          <string>A</string>
+          <string>A, см^2</string>
          </property>
         </column>
         <column>
          <property name="text">
-          <string>σ</string>
+          <string>σ, МПа</string>
          </property>
         </column>
         <column>
          <property name="text">
-          <string>E</string>
+          <string>E, МПа</string>
          </property>
         </column>
         <item row="0" column="0">
          <property name="text">
-          <string>1</string>
+          <string/>
          </property>
          <property name="textAlignment">
           <set>AlignLeading|AlignVCenter</set>
@@ -60,7 +60,7 @@
         </item>
         <item row="0" column="1">
          <property name="text">
-          <string>1</string>
+          <string/>
          </property>
          <property name="textAlignment">
           <set>AlignLeading|AlignVCenter</set>
@@ -68,7 +68,7 @@
         </item>
         <item row="0" column="2">
          <property name="text">
-          <string>1</string>
+          <string/>
          </property>
          <property name="textAlignment">
           <set>AlignLeading|AlignVCenter</set>
@@ -76,7 +76,7 @@
         </item>
         <item row="0" column="3">
          <property name="text">
-          <string>1</string>
+          <string/>
          </property>
          <property name="textAlignment">
           <set>AlignLeading|AlignVCenter</set>
@@ -97,13 +97,6 @@
          <widget class="QCheckBox" name="rightTerm">
           <property name="text">
            <string>Заделка справа</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="drawButton">
-          <property name="text">
-           <string>Отрисовать </string>
           </property>
          </widget>
         </item>
@@ -158,12 +151,12 @@
         </row>
         <column>
          <property name="text">
-          <string>F</string>
+          <string>F, ql</string>
          </property>
         </column>
         <item row="0" column="0">
          <property name="text">
-          <string>1</string>
+          <string/>
          </property>
          <property name="textAlignment">
           <set>AlignLeading|AlignVCenter</set>
@@ -171,7 +164,7 @@
         </item>
         <item row="1" column="0">
          <property name="text">
-          <string>1</string>
+          <string/>
          </property>
          <property name="textAlignment">
           <set>AlignLeading|AlignVCenter</set>
@@ -188,12 +181,12 @@
         </row>
         <column>
          <property name="text">
-          <string>q</string>
+          <string>q, Н/м</string>
          </property>
         </column>
         <item row="0" column="0">
          <property name="text">
-          <string>1</string>
+          <string/>
          </property>
          <property name="textAlignment">
           <set>AlignLeading|AlignVCenter</set>
