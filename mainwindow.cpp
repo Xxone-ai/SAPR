@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->distributedForces->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->leftTerm->setEnabled(false);
     ui->rightTerm->setEnabled(false);
+    QAction::connect(ui->saveFileAs, &QAction::triggered, this, &MainWindow::saveFileAs);
 }
 
 MainWindow::~MainWindow()
@@ -294,4 +295,49 @@ void MainWindow::scaleView(qreal scaleFactor)
 void MainWindow::wheelEvent(QWheelEvent *event)
 {
     scaleView(pow(2., -event->angleDelta().y() / 240.0));
+}
+
+void MainWindow::saveFileAs()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, "Сохранить как");
+        QFile file(fileName);
+
+        if(!file.open(QFile::WriteOnly|QFile::Text))
+        {
+            QMessageBox::warning(this, "Непредвиденная ошибка!","Невозможно открыть файл: " + file.errorString());
+            return;
+        }
+    usingFile = fileName;
+    QTextStream loadTo(&file);
+    QString fileText;
+    loadTo<<"**********Количество стержней**********\n";
+    loadTo<<"**********"<<"*********"<<rods.size()<<"*********"<<"**********\n";
+    loadTo<<"**********Параметры стержней**********\n";
+    loadTo<<"******L****A****σ****E\n";
+    for(int i = 0; i<rods.size();++i)
+    {
+        loadTo<<QString::number(i+1)<<":";
+        for(int j = 0; j < rods[i].size(); ++j)
+        {
+            loadTo<<"****"<<QString::number(rods[i][j]);
+        }
+        loadTo<<"\n";
+    }
+    loadTo<<"****Сосредоточенные нагрузки****\n";
+    for(int i = 0; i < focusedForcesList.size(); ++i)
+    {
+        loadTo<<"****Номер узла: "<<QString::number(i+1);
+        loadTo<<"****F = "<<QString::number(focusedForcesList[i])<<"\n";
+    }
+    loadTo<<"****Распределенные нагрузки****\n";
+    for(int i = 0; i < distributedForces.size(); ++i)
+    {
+        loadTo<<"****Номер стержня: "<<QString::number(i+1);
+        loadTo<<"****q = "<<QString::number(distributedForces[i])<<"\n";
+    }
+    loadTo<<"****Информация о заделках****\n";
+    loadTo<<"****Заделка слева: ";
+    loadTo<<QString::number(ui->leftTerm->isChecked())<<"\n";
+    loadTo<<"****Заделка справа: ";
+    loadTo<<QString::number(ui->rightTerm->isChecked())<<"\n";
 }

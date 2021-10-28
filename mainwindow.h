@@ -30,6 +30,7 @@ private:
     void addRodDataInList();
 
     bool checkTable(QTableWidget* wgt);
+
 public:
     MainWindow(QWidget *parent = nullptr);
 
@@ -56,6 +57,8 @@ private slots:
 
     void on_rightTerm_clicked();
 
+    void saveFileAs();
+
 private:
     Ui::MainWindow *ui;
     QVector<double> rodParams;
@@ -63,6 +66,6 @@ private:
     QList <QRect> rects;
     QList<double> focusedForcesList;
     QList<double> distributedForces;
-
+    QString usingFile;
 };
 #endif // MAINWINDOW_H
