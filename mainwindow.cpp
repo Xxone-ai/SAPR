@@ -11,7 +11,41 @@ MainWindow::MainWindow(QWidget *parent)
     ui->distributedForces->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->leftTerm->setEnabled(false);
     ui->rightTerm->setEnabled(false);
+    ui->saveFile->setEnabled(false);
+    ui->clearAll->setEnabled(false);
+    for(int i = 0; i < ui->rodDataTable->rowCount(); i++)
+    {
+         for(int j = 0; j < ui->rodDataTable->columnCount(); j++)
+         {
+                 this->rodParams.push_back(ui->rodDataTable->item(i,j)->text().toDouble());
+         }
+         if(rodParams.size() == 4)
+         {
+             this->rods.push_back(rodParams);
+             ui->leftTerm->setEnabled(1);
+             ui->rightTerm->setEnabled(1);
+         }
+         rodParams.clear();
+    }
+    for(int i = 0; i < ui->distributedForces->rowCount(); i++)
+    {
+        for(int j = 0; j < ui->distributedForces->columnCount(); j++)
+        {
+                 this->distributedForces.push_back(ui->distributedForces->item(i,j)->text().toDouble());
+        }
+    }
+    for(int i = 0; i < ui->focusedForces->rowCount(); i++)
+    {
+         for(int j = 0; j < ui->focusedForces->columnCount(); j++)
+         {
+             this->focusedForcesList.push_back(ui->focusedForces->item(i,j)->text().toDouble());
+         }
+    }
+    draw();
     QAction::connect(ui->saveFileAs, &QAction::triggered, this, &MainWindow::saveFileAs);
+    QAction::connect(ui->saveFile, &QAction::triggered, this, &MainWindow::saveFile);
+    QAction::connect(ui->exit, &QAction::triggered, this, &MainWindow::close);
+
 }
 
 MainWindow::~MainWindow()
@@ -52,10 +86,23 @@ void MainWindow::on_addRodButton_clicked()
     addRow(ui->rodDataTable);
     addRow(ui->focusedForces);
     addRow(ui->distributedForces);
+    for(int i = 0; i < ui->rodDataTable->columnCount(); ++i)
+    {
+        ui->rodDataTable->setItem(ui->rodDataTable->rowCount()-1, i, new QTableWidgetItem());
+    }
+
+    for(int j = 0; j < ui->focusedForces->columnCount(); ++j)
+    {
+        ui->focusedForces->setItem(ui->focusedForces->rowCount()-1, j, new QTableWidgetItem());
+    }
+    ui->distributedForces->setItem(ui->distributedForces->rowCount()-1, 0, new QTableWidgetItem());
     if(ui->rodDataTable->rowCount() == 1)
         ui->deleteRodButton->setEnabled(false);
     else
+    {
        ui->deleteRodButton->setEnabled(true);
+       ui->clearAll->setEnabled(true);
+    }
 }
 
 void MainWindow::on_deleteRodButton_clicked()
@@ -79,13 +126,11 @@ void MainWindow::on_deleteRodButton_clicked()
 void MainWindow::on_rodDataTable_itemChanged(QTableWidgetItem *item)
 {
     QString data = item->text();
-    if(validateRodData(data))
-        item->setBackground(Qt::green);
-    else
+    if(!validateRodData(data))
     {
-        item->setBackground(Qt::red);
         item->setText("1");
     }
+   ui->clearAll->setEnabled(true);
    if(checkTable(this->ui->rodDataTable))
    {
        rods.clear();
@@ -116,7 +161,9 @@ bool MainWindow::checkTable(QTableWidget *wgt)
            if(wgt->item(i, j)!=nullptr)
            {
                 if(wgt->item(i, j)->text().isEmpty())
+                {
                      return false;
+                }
            }
            else return false;
         }
@@ -127,15 +174,11 @@ bool MainWindow::checkTable(QTableWidget *wgt)
 void MainWindow::on_focusedForces_itemChanged(QTableWidgetItem *item)
 {
     QString data = item->text();
-    if(validateForceData(data) == true)
+    if(!validateForceData(data))
     {
-        item->setBackground(Qt::green);
-    }
-    else
-    {
-        //item->setBackground(Qt::red);
         item->setData(0, QString::number(0));
     }
+    ui->clearAll->setEnabled(true);
     if(checkTable(this->ui->focusedForces))
     {
         focusedForcesList.clear();
@@ -153,14 +196,11 @@ void MainWindow::on_focusedForces_itemChanged(QTableWidgetItem *item)
 void MainWindow::on_distributedForces_itemChanged(QTableWidgetItem *item)
 {
     QString data = item->text();
-    if(validateForceData(data) == true)
-    {
-        item->setBackground(Qt::green);
-    }
-    else
+    if(!validateForceData(data))
     {
         item->setData(0, QString::number(0));
     }
+    ui->clearAll->setEnabled(true);
     if(checkTable(ui->distributedForces))
     {
         distributedForces.clear();
@@ -194,16 +234,16 @@ void MainWindow::draw()
          {
              QRect rect = QRect(x, y, widht*rods[i][0], height*rods[i][1]);
              rects.push_back(rect);
-             scene->addRect(rect, QPen(Qt::black, 4));
+             scene->addRect(rect, QPen(Qt::black, 2));
              x+=widht*rods[i][0];
 
          }
          else
          {
-             y= rects[i-1].center().y()-height*rods[i][1]/2;
+             y= rects[i-1].center().y()-height*rods[i][1]/2+1;
              QRect rect = QRect(x, y, widht*rods[i][0], height*rods[i][1]);
              rects.push_back(rect);
-             scene->addRect(rect, QPen(Qt::black, 4));
+             scene->addRect(rect, QPen(Qt::black, 2));
              x+=widht*rods[i][0];
          }
     }
@@ -297,47 +337,82 @@ void MainWindow::wheelEvent(QWheelEvent *event)
     scaleView(pow(2., -event->angleDelta().y() / 240.0));
 }
 
-void MainWindow::saveFileAs()
+void MainWindow::saveFile()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, "Сохранить как");
-        QFile file(fileName);
-
-        if(!file.open(QFile::WriteOnly|QFile::Text))
-        {
-            QMessageBox::warning(this, "Непредвиденная ошибка!","Невозможно открыть файл: " + file.errorString());
-            return;
-        }
-    usingFile = fileName;
+    QFile file(usingFile);
+    if(!file.open(QFile::WriteOnly|QFile::Text)) //Проверка корректности открытия файла. Автор - Коваленко Владимир
+    {
+        QMessageBox::warning(this, "Непредвиденная ошибка!","Невозможно открыть файл: " + file.errorString());
+        return;
+    }
     QTextStream loadTo(&file);
     QString fileText;
-    loadTo<<"**********Количество стержней**********\n";
-    loadTo<<"**********"<<"*********"<<rods.size()<<"*********"<<"**********\n";
-    loadTo<<"**********Параметры стержней**********\n";
-    loadTo<<"******L****A****σ****E\n";
+    loadTo<<"Количество стержней\n";
+    loadTo<<rods.size()<<"\n";
+    loadTo<<"Параметры стержней\n";
+    loadTo<<"L\tA\tσ\tE\n";
     for(int i = 0; i<rods.size();++i)
     {
-        loadTo<<QString::number(i+1)<<":";
         for(int j = 0; j < rods[i].size(); ++j)
         {
-            loadTo<<"****"<<QString::number(rods[i][j]);
+            loadTo<<QString::number(rods[i][j])<<"\t";
         }
         loadTo<<"\n";
     }
-    loadTo<<"****Сосредоточенные нагрузки****\n";
+    loadTo<<"Сосредоточенные нагрузки\n";
     for(int i = 0; i < focusedForcesList.size(); ++i)
     {
-        loadTo<<"****Номер узла: "<<QString::number(i+1);
-        loadTo<<"****F = "<<QString::number(focusedForcesList[i])<<"\n";
+        loadTo<<QString::number(focusedForcesList[i])<<"\n";
     }
-    loadTo<<"****Распределенные нагрузки****\n";
+    loadTo<<"Распределенные нагрузки\n";
     for(int i = 0; i < distributedForces.size(); ++i)
     {
-        loadTo<<"****Номер стержня: "<<QString::number(i+1);
-        loadTo<<"****q = "<<QString::number(distributedForces[i])<<"\n";
+        loadTo<<QString::number(distributedForces[i])<<"\n";
     }
-    loadTo<<"****Информация о заделках****\n";
-    loadTo<<"****Заделка слева: ";
+    loadTo<<"Информация о заделках\n";
+    loadTo<<"Заделка слева: \n";
     loadTo<<QString::number(ui->leftTerm->isChecked())<<"\n";
-    loadTo<<"****Заделка справа: ";
+    loadTo<<"Заделка справа: \n";
     loadTo<<QString::number(ui->rightTerm->isChecked())<<"\n";
+    ui->saveFile->setEnabled(true);
+}
+
+void MainWindow::saveFileAs()
+{
+    usingFile = QFileDialog::getSaveFileName(this, "Сохранить как");
+    saveFile();
+}
+
+void MainWindow::readFromFile()
+{
+
+}
+
+void MainWindow::on_clearAll_clicked()
+{
+    while(ui->rodDataTable->rowCount()!=1)
+        on_deleteRodButton_clicked();
+    rods.clear();
+    focusedForcesList.clear();
+    distributedForces.clear();
+    for(int i = 0; i < ui->rodDataTable->columnCount(); ++i)
+    {
+        ui->rodDataTable->setItem(ui->rodDataTable->rowCount()-1, i, new QTableWidgetItem());
+    }
+    for(int i = 0; i < ui->focusedForces->rowCount(); ++i)
+    {
+        for(int j = 0; j < ui->focusedForces->columnCount(); ++j)
+        {
+            ui->focusedForces->setItem(i, j, new QTableWidgetItem());
+        }
+    }
+    ui->distributedForces->setItem(0, 0, new QTableWidgetItem());
+    ui->leftTerm->setChecked(false);
+    ui->rightTerm->setChecked(false);
+    ui->deleteRodButton->setEnabled(false);
+    ui->leftTerm->setEnabled(false);
+    ui->rightTerm->setEnabled(false);
+    ui->graphicsView->scene()->clear();
+    ui->clearAll->setEnabled(false);
+    draw();
 }

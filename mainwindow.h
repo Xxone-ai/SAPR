@@ -59,6 +59,12 @@ private slots:
 
     void saveFileAs();
 
+    void readFromFile();
+
+    void saveFile();
+
+    void on_clearAll_clicked();
+
 private:
     Ui::MainWindow *ui;
     QVector<double> rodParams;
