@@ -65,6 +65,7 @@ private slots:
 
     void on_clearAll_clicked();
 
+    void calculate();
 private:
     Ui::MainWindow *ui;
     QVector<double> rodParams;
@@ -73,5 +74,8 @@ private:
     QList<double> focusedForcesList;
     QList<double> distributedForces;
     QString usingFile;
+    QVector<QVector<double>> matrix;
+
+    QVector<double> gauss(QVector<QVector<double>> EAMatrix, QVector<double> b);
 };
 #endif // MAINWINDOW_H

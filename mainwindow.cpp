@@ -45,7 +45,7 @@ MainWindow::MainWindow(QWidget *parent)
     QAction::connect(ui->saveFileAs, &QAction::triggered, this, &MainWindow::saveFileAs);
     QAction::connect(ui->saveFile, &QAction::triggered, this, &MainWindow::saveFile);
     QAction::connect(ui->exit, &QAction::triggered, this, &MainWindow::close);
-
+    QAction::connect(ui->loadFromFile, &QAction::triggered, this, &MainWindow::readFromFile);
 }
 
 MainWindow::~MainWindow()
@@ -71,14 +71,7 @@ bool MainWindow::validateForceData(QString data)
 
 void MainWindow::addRow(QTableWidget* wgt)
 {
-    QTableWidgetItem* tmp = new QTableWidgetItem();
     wgt->insertRow(wgt->rowCount());
-    for(int i = 0; i <  wgt->columnCount(); ++i)
-    {
-        continue;
-        wgt->setItem(ui->rodDataTable->rowCount() - 1, i, tmp);
-    }
-    delete tmp;
 }
 
 void MainWindow::on_addRodButton_clicked()
@@ -219,6 +212,7 @@ void MainWindow::draw()
 {
     QGraphicsScene *scene = new QGraphicsScene(this);
     QList<QRect> rects;
+    QString dir = QApplication::applicationDirPath();
     scene->setItemIndexMethod(QGraphicsScene::NoIndex);
     if(rods.empty())
     {
@@ -247,15 +241,16 @@ void MainWindow::draw()
              x+=widht*rods[i][0];
          }
     }
+
     if(ui->leftTerm->isChecked())
     {
-        QGraphicsPixmapItem* leftTerm = scene->addPixmap(QPixmap("C:/Qt/SAPR/res/images/leftTerm.png"));
+        QGraphicsPixmapItem* leftTerm = scene->addPixmap(QPixmap(dir+"/res/images/leftTerm.png"));
         leftTerm->setPos(rects.first().bottomLeft().x()-leftTerm->pixmap().width(), rects.first().center().y()-leftTerm->pixmap().height()/2);
         leftTerm->show();
     }
     if(ui->rightTerm->isChecked())
     {
-        QGraphicsPixmapItem* rightTerm = scene->addPixmap(QPixmap("C:/Qt/SAPR/res/images/rightTerm.png"));
+        QGraphicsPixmapItem* rightTerm = scene->addPixmap(QPixmap(dir+"/res/images/rightTerm.png"));
         rightTerm->setPos(rects.last().bottomRight().x(), rects.first().center().y()-rightTerm->pixmap().height()/2);
         rightTerm->show();
     }
@@ -266,29 +261,33 @@ void MainWindow::draw()
     {
         if (i!=rods.size())
         {
-            if(focusedForcesList[i] < 0)
-            {
-                QGraphicsPixmapItem* focusedForceLeft = scene->addPixmap(QPixmap("C:/Qt/SAPR/res/images/focusedForceLeft.png"));
-                focusedForceLeft->setPos(rects[i].bottomLeft().x(), rects[i].center().y()-focusedForceLeft->pixmap().height()/2);
-            }
-            else if(focusedForcesList[i] > 0)
-            {
-                QGraphicsPixmapItem* focusedForceRight = scene->addPixmap(QPixmap("C:/Qt/SAPR/res/images/focusedForceRight.png"));
-                focusedForceRight->setPos(rects[i].bottomLeft().x(), rects[i].center().y()-focusedForceRight->pixmap().height()/2);
-            }
+
+                if(focusedForcesList[i] < 0)
+                {
+                    QGraphicsPixmapItem* focusedForceLeft = scene->addPixmap(QPixmap(dir+"/res/images/focusedForceLeft.png"));
+                    focusedForceLeft->setPos(rects[i].bottomLeft().x(), rects[i].center().y()-focusedForceLeft->pixmap().height()/2);
+                }
+                else if(focusedForcesList[i] > 0)
+                {
+                    QGraphicsPixmapItem* focusedForceRight = scene->addPixmap(QPixmap(dir+"/res/images/focusedForceRight.png"));
+                    focusedForceRight->setPos(rects[i].bottomLeft().x(), rects[i].center().y()-focusedForceRight->pixmap().height()/2);
+                }
+
         }
         else
         {
-            if(focusedForcesList[i] < 0)
-            {
-                QGraphicsPixmapItem* focusedForceLeft = scene->addPixmap(QPixmap("C:/Qt/SAPR/res/images/focusedForceLeft.png"));
-                focusedForceLeft->setPos(rects.last().bottomRight().x()-focusedForceLeft->pixmap().width(), rects.last().center().y()-focusedForceLeft->pixmap().height()/2);
-            }
-            else if(focusedForcesList[i] > 0)
-            {
-                QGraphicsPixmapItem* focusedForceRight = scene->addPixmap(QPixmap("C:/Qt/SAPR/res/images/focusedForceRight.png"));
-                focusedForceRight->setPos(rects.last().bottomRight().x()-focusedForceRight->pixmap().width(), rects.last().center().y()-focusedForceRight->pixmap().height()/2);
-            }
+
+                if(focusedForcesList[i] < 0)
+                {
+                    QGraphicsPixmapItem* focusedForceLeft = scene->addPixmap(QPixmap(dir+"/res/images/focusedForceLeft.png"));
+                    focusedForceLeft->setPos(rects.last().bottomRight().x()-focusedForceLeft->pixmap().width(), rects.last().center().y()-focusedForceLeft->pixmap().height()/2);
+                }
+                else if(focusedForcesList[i] > 0)
+                {
+                    QGraphicsPixmapItem* focusedForceRight = scene->addPixmap(QPixmap(dir+"/res/images/focusedForceRight.png"));
+                    focusedForceRight->setPos(rects.last().bottomRight().x()-focusedForceRight->pixmap().width(), rects.last().center().y()-focusedForceRight->pixmap().height()/2);
+                }
+
         }
     }
     }
@@ -300,12 +299,12 @@ void MainWindow::draw()
         {
             if(distributedForces[i] < 0)
             {
-                QGraphicsPixmapItem* distributedForceLeft = scene->addPixmap(QPixmap("C:/Qt/SAPR/res/images/distributedForceLeft.png"));
+                QGraphicsPixmapItem* distributedForceLeft = scene->addPixmap(QPixmap(dir+"/res/images/distributedForceLeft.png"));
                 distributedForceLeft->setPos(rects[i].center().x()-distributedForceLeft->pixmap().width()/2, rects[i].center().y()-distributedForceLeft->pixmap().height()/2);
             }
             else
             {
-                QGraphicsPixmapItem* distributedForceRight = scene->addPixmap(QPixmap("C:/Qt/SAPR/res/images/distributedForceRight.png"));
+                QGraphicsPixmapItem* distributedForceRight = scene->addPixmap(QPixmap(dir+"/res/images/distributedForceRight.png"));
                 distributedForceRight->setPos(rects[i].center().x()-distributedForceRight->pixmap().width()/2, rects[i].center().y()-distributedForceRight->pixmap().height()/2);
             }
         }
@@ -315,11 +314,38 @@ void MainWindow::draw()
 
 void MainWindow::on_leftTerm_clicked()
 {
+    if(ui->leftTerm->isChecked())
+    {
+        ui->focusedForces->item(0,0)->setText("0");
+        ui->focusedForces->item(0, 0)->setFlags(ui->focusedForces->item(0, 0)->flags() & ~Qt::ItemIsEditable);
+        ui->focusedForces->item(0, 0)->setBackground(Qt::gray);
+    }
+    else
+    {
+        ui->focusedForces->item(0, 0)->setFlags(ui->focusedForces->item(0, 0)->flags() | Qt::ItemIsEditable);
+        ui->focusedForces->item(0, 0)->setBackground(Qt::white);
+    }
     draw();
 }
 
 void MainWindow::on_rightTerm_clicked()
 {
+    if(ui->rightTerm->isChecked())
+    {
+        ui->focusedForces->item(ui->focusedForces->rowCount()-1, 0)->setText("0");
+        ui->focusedForces->item(ui->focusedForces->rowCount()-1, 0)->setFlags(ui->focusedForces->item(ui->focusedForces->rowCount()-1, 0)->flags() & ~Qt::ItemIsEditable);
+        ui->focusedForces->item(ui->focusedForces->rowCount()-1, 0)->setBackground(Qt::gray);
+        ui->addRodButton->setEnabled(0);
+        ui->deleteRodButton->setEnabled(0);
+    }
+    else
+    {
+        ui->focusedForces->item(ui->focusedForces->rowCount()-1, 0)->setFlags(ui->focusedForces->item(ui->focusedForces->rowCount()-1, 0)->flags() | Qt::ItemIsEditable);
+        ui->focusedForces->item(ui->focusedForces->rowCount()-1, 0)->setBackground(Qt::white);
+        ui->addRodButton->setEnabled(1);
+        ui->deleteRodButton->setEnabled(1);
+    }
+
     draw();
 }
 
@@ -340,22 +366,22 @@ void MainWindow::wheelEvent(QWheelEvent *event)
 void MainWindow::saveFile()
 {
     QFile file(usingFile);
-    if(!file.open(QFile::WriteOnly|QFile::Text)) //Проверка корректности открытия файла. Автор - Коваленко Владимир
+    if(!file.open(QFile::WriteOnly|QFile::Text))
     {
         QMessageBox::warning(this, "Непредвиденная ошибка!","Невозможно открыть файл: " + file.errorString());
         return;
     }
     QTextStream loadTo(&file);
     QString fileText;
-    loadTo<<"Количество стержней\n";
+    loadTo<<"Количество стержней: ";
     loadTo<<rods.size()<<"\n";
     loadTo<<"Параметры стержней\n";
-    loadTo<<"L\tA\tσ\tE\n";
+    loadTo<<"L  A  σ  E\n";
     for(int i = 0; i<rods.size();++i)
     {
         for(int j = 0; j < rods[i].size(); ++j)
         {
-            loadTo<<QString::number(rods[i][j])<<"\t";
+            loadTo<<QString::number(rods[i][j])<<"  ";
         }
         loadTo<<"\n";
     }
@@ -370,9 +396,9 @@ void MainWindow::saveFile()
         loadTo<<QString::number(distributedForces[i])<<"\n";
     }
     loadTo<<"Информация о заделках\n";
-    loadTo<<"Заделка слева: \n";
+    loadTo<<"Заделка слева: ";
     loadTo<<QString::number(ui->leftTerm->isChecked())<<"\n";
-    loadTo<<"Заделка справа: \n";
+    loadTo<<"Заделка справа: ";
     loadTo<<QString::number(ui->rightTerm->isChecked())<<"\n";
     ui->saveFile->setEnabled(true);
 }
@@ -385,7 +411,137 @@ void MainWindow::saveFileAs()
 
 void MainWindow::readFromFile()
 {
+    QString fileName = QFileDialog::getOpenFileName(this,"Open file");
+    QFile in(fileName);
+    usingFile = fileName;
+    if(!in.open(QIODevice::ReadOnly|QFile::Text))
+    {
+        QMessageBox::warning(this,"Непредвиденная ошибка!","Невозможно открыть файл: " + in.errorString());
+        return;
+    }
 
+    QString line;
+    int rodAmount = 0;
+    QList<QStringList> rodData;
+    QStringList focusedForcesData;
+    QStringList distributedForcesData;
+    int leftTerm = 0;
+    int rightTerm = 0;
+    while(!in.atEnd())
+    {
+        line = in.readLine();
+        if(line.contains("Количество стержней"))
+        {
+            QStringList tmp = line.split(' ', Qt::SkipEmptyParts);
+            rodAmount = tmp[2].trimmed().toInt();
+        }
+        if(line.contains("L"))
+        {
+            for(int i = 0; i < rodAmount; i++)
+            {
+                line = in.readLine();
+                rodData.push_back(line.split(' ', Qt::SkipEmptyParts));
+
+            }
+        }
+        if(line.contains("Сосредоточенные нагрузки"))
+        {
+            for(int i = 0; i <= rodAmount; i++)
+            {
+                line = in.readLine().trimmed();
+                focusedForcesData.push_back(line);
+            }
+        }
+        if(line.contains("Распределенные нагрузки"))
+        {
+            for(int i = 0; i < rodAmount; i++)
+            {
+                line = in.readLine().trimmed();
+                distributedForcesData.push_back(line);
+            }
+        }
+
+        if(line.contains("Заделка слева"))
+         {
+                    QStringList tmp = line.split(' ', Qt::SkipEmptyParts);
+                    leftTerm = tmp[2].trimmed().toInt();
+         }
+         if(line.contains("Заделка справа"))
+         {
+                    QStringList tmp = line.split(' ', Qt::SkipEmptyParts);
+                    rightTerm = tmp[2].trimmed().toInt();
+         }
+    }
+    if(!rodAmount)
+    {
+        QMessageBox::warning(this,"Непредвиденная ошибка!","Ошибка в данных" + in.errorString());
+        return;
+    }
+    if(focusedForcesData.size() != rodAmount + 1||distributedForcesData.size() != rodAmount||rodData.size() != rodAmount)
+    {
+        QMessageBox::warning(this,"Непредвиденная ошибка!","Ошибка в данных" + in.errorString());
+        return;
+    }
+    on_clearAll_clicked();
+    while(ui->rodDataTable->rowCount() != rodAmount)
+    {
+        on_addRodButton_clicked();
+    }
+    for(int i = 0; i < ui->rodDataTable->rowCount(); ++i)
+    {
+        for(int j = 0; j < ui->rodDataTable->columnCount(); ++j)
+        {
+            ui->rodDataTable->item(i,j)->setText(rodData[i][j]);
+        }
+    }
+    for(int i = 0; i < ui->focusedForces->rowCount(); ++i)
+    {
+        for(int j = 0; j < ui->focusedForces->columnCount(); ++j)
+        {
+            ui->focusedForces->item(i,j)->setText(focusedForcesData[i]);
+        }
+    }
+    for(int i = 0; i < ui->distributedForces->rowCount(); ++i)
+    {
+        for(int j = 0; j < ui->distributedForces->columnCount(); ++j)
+        {
+            ui->distributedForces->item(i,j)->setText(distributedForcesData[i]);
+        }
+    }
+    while(ui->rodDataTable->rowCount()!=rodAmount)
+    {
+        on_addRodButton_clicked();
+    }
+
+    ui->leftTerm->setChecked(leftTerm);
+    ui->rightTerm->setChecked(rightTerm);
+    if(ui->leftTerm->isChecked())
+    {
+        ui->focusedForces->item(0,0)->setText("0");
+        ui->focusedForces->item(0, 0)->setFlags(ui->focusedForces->item(0, 0)->flags() & ~Qt::ItemIsEditable);
+        ui->focusedForces->item(0, 0)->setBackground(Qt::gray);
+    }
+    else
+    {
+        ui->focusedForces->item(0, 0)->setFlags(ui->focusedForces->item(0, 0)->flags() | Qt::ItemIsEditable);
+        ui->focusedForces->item(0, 0)->setBackground(Qt::white);
+    }
+    if(ui->rightTerm->isChecked())
+    {
+        ui->focusedForces->item(ui->focusedForces->rowCount()-1, 0)->setText("0");
+        ui->focusedForces->item(ui->focusedForces->rowCount()-1, 0)->setFlags(ui->focusedForces->item(ui->focusedForces->rowCount()-1, 0)->flags() & ~Qt::ItemIsEditable);
+        ui->focusedForces->item(ui->focusedForces->rowCount()-1, 0)->setBackground(Qt::gray);
+        ui->addRodButton->setEnabled(0);
+        ui->deleteRodButton->setEnabled(0);
+    }
+    else
+    {
+        ui->focusedForces->item(ui->focusedForces->rowCount()-1, 0)->setFlags(ui->focusedForces->item(ui->focusedForces->rowCount()-1, 0)->flags() | Qt::ItemIsEditable);
+        ui->focusedForces->item(ui->focusedForces->rowCount()-1, 0)->setBackground(Qt::white);
+        ui->addRodButton->setEnabled(1);
+        ui->deleteRodButton->setEnabled(1);
+    }
+    draw();
 }
 
 void MainWindow::on_clearAll_clicked()
@@ -416,3 +572,183 @@ void MainWindow::on_clearAll_clicked()
     ui->clearAll->setEnabled(false);
     draw();
 }
+
+void MainWindow::calculate()
+{
+    const int STEP = 50;
+    QVector<double> EAVector;
+    for(int i = 0; i < rods.size(); ++i)
+    {
+        EAVector.push_back(rods[i][1]*rods[i][3]/rods[i][0]);
+    }
+    QVector<QVector<double>> EAMatrix;
+    for(int i = 0; i < focusedForcesList.size(); ++i)
+    {
+        for(int j = 0; j < focusedForcesList.size(); ++j)
+        {
+            EAMatrix[i].push_back(0);
+        }
+    }
+    for(int i = 0; i < EAMatrix.size(); ++i)
+    {
+        for(int j = 0; j < EAMatrix[i].size(); ++j)
+        {
+            if(i == 0)
+            {
+                if(ui->leftTerm->isChecked())
+                {
+                   EAMatrix[i][i] = 1;
+                }
+                else
+                {
+                    EAMatrix[i][i] = EAVector[i];
+                    EAMatrix[i][i+1] = -EAVector[i];
+                    EAMatrix[i+1][i] = -EAVector[i];
+                }
+            }
+            else if(i < EAMatrix.size()-1)
+            {
+                EAMatrix[i][i] = EAVector[i] + EAVector[i-1];
+                EAMatrix[i][i+1] = -EAVector[i];
+                EAMatrix[i+1][i] = -EAVector[i];
+            }
+            else
+            {
+                if(ui->rightTerm->isChecked())
+                {
+                    EAMatrix[i][i] = 1;
+                }
+                else
+                {
+                    EAMatrix[i][i] = EAVector[i-1];
+                }
+            }
+
+        }
+    }
+
+    QVector<double> b;
+    for(int i = 0; i < rods.size() + 1; ++i)
+    {
+        if(i==0)
+        {
+            if(ui->leftTerm->isChecked())
+            {
+                b.push_back(0);
+            }
+        }
+        if(i != rods.size())
+        {
+            b.push_back(rods[i][0]*distributedForces[i]/2 + b[i-1]);
+        }
+        else
+        {
+            if(ui->rightTerm->isChecked())
+            {
+                b.push_back(0);
+            }
+            else
+            {
+                b.push_back(rods[i][0]*distributedForces[i]/2 + b[i-1]);
+            }
+        }
+    }
+    QVector<double> delta = gauss(EAMatrix, b);
+    QVector<QVector<double>> resultNX;
+    for(int i = 0; i < rods.size(); ++i)
+    {
+        QVector<double> NX;
+        for(int j = 0; j < STEP*rods[i][0]; ++j)
+        {
+            double nxTmp = rods[i][3]*rods[i][1]/rods[i][0] *
+                    (delta[i+1] - delta[i]) + distributedForces[i]*rods[i][0]/2 * (1-2*(j*rods[i][0]/(pow(rods[i][0], 2)*STEP)));
+            NX.push_back(nxTmp);
+        }
+        resultNX.push_back(NX);
+    }
+    QVector<QVector<double>> resultSigma;
+    for(int i = 0; i < rods.size(); ++i)
+    {
+       QVector<double> sigma;
+        for(int j = 0; j < STEP*rods[i][0]; ++j)
+        {
+            double sigmaTmp = resultNX[i][j]/rods[i][1];
+            sigma.push_back(sigmaTmp);
+        }
+        resultSigma.push_back(sigma);
+    }
+    QVector<QVector<double>> resultUX;
+    for(int i = 0; i < rods.size(); ++i)
+    {
+        QVector<double> UX;
+        for(int j = 0; j < STEP*rods[i][0]; ++j)
+        {
+            double uxTmp = delta[i] + (j*rods[i][0]/(pow(rods[i][0], 2)*STEP))*(delta[i+1] - delta[i]) + (distributedForces[i]*pow(rods[i][0], 2))
+                    /(2*rods[i][3]*rods[i][1]) * (j*rods[i][0]/(pow(rods[i][0], 2)*STEP)) * (1 - 2*(j*rods[i][0]/(pow(rods[i][0], 2)*STEP)));
+            UX.push_back(uxTmp);
+        }
+        resultUX.push_back(UX);
+    }
+ }
+
+QVector<double> MainWindow::gauss(QVector<QVector<double>> EAMatrix, QVector<double> b) //Взято с progcpp.ru
+{
+    QVector<double> delta;
+    for(int i = 0 ; i < EAMatrix.size(); ++i)
+        delta.push_back(0);
+    double max;
+    const double eps = 0.00001;
+    int index;
+    int k = 0;
+    while (k < EAMatrix.size())
+    {
+        max = abs(EAMatrix[k][k]);
+        index = k;
+        for(int i = ++k; i < EAMatrix.size(); ++i)
+        {
+            if(abs(EAMatrix[i][k]) > max)
+            {
+                max = abs(EAMatrix[i][k]);
+                index = i;
+            }
+        }
+        if(max < eps)
+        {
+            QMessageBox::warning(this,"Непредвиденная ошибка!","Ошибка в расчетах");
+            return delta;
+        }
+        for(int i = 0; i < EAMatrix.size(); ++i)
+        {
+            double tmp = EAMatrix[k][i];
+            EAMatrix[k][i] = EAMatrix[index][i];
+            EAMatrix[index][i] = tmp;
+        }
+        double tmp = b[k];
+        b[k] = b[index];
+        b[index] = tmp;
+        for (int i = k; i < EAMatrix.size(); i++)
+            {
+              double temp = EAMatrix[i][k];
+              if (abs(temp) < eps)
+                  continue;
+              for (int j = 0; j < EAMatrix.size(); j++)
+                EAMatrix[i][j] = EAMatrix[i][j] / temp;
+              b[i] = b[i] / temp;
+              if (i == k)
+                  continue;
+              for (int j = 0; j < EAMatrix.size(); j++)
+                EAMatrix[i][j] = EAMatrix[i][j] - EAMatrix[k][j];
+              b[i] = b[i] - b[k];
+            }
+            k++;
+       }
+    for (k = EAMatrix.size() - 1; k >= 0; k--)
+     {
+       delta[k] = b[k];
+       for (int i = 0; i < k; i++)
+         b[i] = b[i] - EAMatrix[i][k] * delta[k];
+     }
+    return delta;
+}
+
+

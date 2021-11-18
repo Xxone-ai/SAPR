@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1117</width>
-    <height>644</height>
+    <width>1126</width>
+    <height>654</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,7 +37,7 @@
         </column>
         <column>
          <property name="text">
-          <string>A, см^2</string>
+          <string>A, м^2</string>
          </property>
         </column>
         <column>
@@ -213,7 +213,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1117</width>
+     <width>1126</width>
      <height>25</height>
     </rect>
    </property>
